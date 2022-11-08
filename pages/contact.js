@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-export default function Home() {
+export default function Contact() {
 	return (
 		<div className='container'>
 			<Head>
@@ -10,9 +10,7 @@ export default function Home() {
 			</Head>
 
 			<div className='page-wrapper'>
-				<div className='quote'>
-					I&apos;m not a great programmer; I&apos;m just a good programmer with great habits.
-				</div>
+				<div className='quote'>Do The Simplest Thing That Could Possibly Work</div>
 			</div>
 		</div>
 	);

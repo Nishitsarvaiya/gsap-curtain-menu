@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-export default function Home() {
+export default function Java() {
 	return (
 		<div className='container'>
 			<Head>
@@ -11,7 +11,8 @@ export default function Home() {
 
 			<div className='page-wrapper'>
 				<div className='quote'>
-					I&apos;m not a great programmer; I&apos;m just a good programmer with great habits.
+					Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows
+					where you live.
 				</div>
 			</div>
 		</div>

@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-export default function Home() {
+export default function Python() {
 	return (
 		<div className='container'>
 			<Head>
@@ -11,7 +11,8 @@ export default function Home() {
 
 			<div className='page-wrapper'>
 				<div className='quote'>
-					I&apos;m not a great programmer; I&apos;m just a good programmer with great habits.
+					A long descriptive name is better than a short enigmatic name. A long descriptive name is better
+					than a long descriptive comment.
 				</div>
 			</div>
 		</div>

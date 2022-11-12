@@ -5,6 +5,7 @@
 	bottom: 0;
 	right: 0;
 	z-index: 9;
+	display: none;
 
 	.menu-secondary-layer {
 		position: fixed;
@@ -14,6 +15,7 @@
 		right: 0;
 		background-color: $secondary;
 		z-index: -1;
+		height: 0;
 	}
 	.menu-primary-layer {
 		position: relative;
@@ -21,6 +23,7 @@
 		height: 100%;
 		overflow: hidden;
 		background-color: $primary;
+		height: 0;
 
 		.menu-background {
 			position: absolute;
@@ -29,7 +32,18 @@
 			bottom: 0;
 			right: 0;
 			opacity: 0;
+			filter: brightness(0.5);
 			z-index: 0;
+
+			.background {
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				transform: scale(1.4);
+				background: url('../../assets/images/toronto.jpg') center/cover;
+			}
 		}
 
 		.menu {
@@ -47,7 +61,7 @@
 						position: relative;
 
 						&__inner {
-							font-size: clamp(3rem, 12vw, 8rem);
+							font-size: clamp(3rem, 10vw, 8rem);
 							font-weight: 700;
 							cursor: pointer;
 							color: $white;
@@ -91,7 +105,6 @@
 
 		.locations-wrapper {
 			margin-top: 6rem;
-			margin-left: 1rem;
 			width: 100%;
 			position: relative;
 			z-index: 1;
@@ -99,11 +112,67 @@
 			.locations {
 				display: flex;
 				align-items: center;
-				gap: 80px;
+				gap: 20px;
 
 				.location {
-					color: $white;
 					cursor: pointer;
+					position: relative;
+					// border: 1px solid white;
+					padding: 2rem 3vw;
+
+					span {
+						color: $white;
+						display: inline-block;
+						pointer-events: none;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1400px) {
+	.menu-wrapper {
+		.menu-primary-layer {
+			.menu {
+				.nav {
+					&-info {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 992px) {
+	.menu-wrapper {
+		.menu-primary-layer {
+			.menu {
+				.nav {
+					&-list {
+						&--item {
+							margin-bottom: 1rem;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 576px) {
+	.menu-wrapper {
+		.menu-primary-layer {
+			.locations-wrapper {
+				.locations {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 10px;
+
+					.location {
+						padding: 1.25rem 3vw;
+					}
 				}
 			}
 		}

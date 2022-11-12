@@ -1,152 +1,73 @@
 import gsap from 'gsap';
 import Link from 'next/link';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { MenuContext } from '../context/MenuContextProvider';
+import useAnimations from '../hooks/useAnimations';
+import paris from '../assets/images/paris.jpg';
+import amsterdam from '../assets/images/amsterdam.jpg';
+import sanfransisco from '../assets/images/san-fransisco.jpg';
+import toronto from '../assets/images/toronto.jpg';
+
+const cities = [
+	{ name: 'Paris', image: paris.src },
+	{ name: 'Amsterdam', image: amsterdam.src },
+	{ name: 'San Fransisco', image: sanfransisco.src },
+	{ name: 'Toronto', image: toronto.src },
+];
 
 const Menu = () => {
 	const { clicked, initial } = useContext(MenuContext);
+	const {
+		staggerReveal,
+		staggerRevealClose,
+		staggerText,
+		staggerTextExit,
+		fadeInUp,
+		fadeInUpExit,
+		handleHover,
+		handleHoverExit,
+	} = useAnimations();
 	const menuRef = useRef(null);
+	const cityBgWrapperRef = useRef(null);
+	const cityBgRef = useRef(null);
 
-	const staggerReveal = (node1, node2) => {
-		gsap.fromTo(
-			[node1, node2],
-			{
-				height: 0,
-				skewY: 2,
-			},
-			{
-				duration: 1,
-				height: '100%',
-				transformOrigin: 'right top',
-				skewY: 0,
-				ease: 'expo.inOut',
-				stagger: {
-					amount: 0.1,
-				},
-			}
-		);
-	};
+	function handleCityEnter(image) {
+		console.log(image);
+		gsap.set(cityBgRef.current, { backgroundImage: `url('${image}')` });
+		gsap.to(cityBgWrapperRef.current, { opacity: 1, duration: 0.5, ease: 'power3.out' });
+	}
 
-	const staggerRevealClose = (node1, node2) => {
-		gsap.to([node1, node2], {
-			duration: 1,
-			height: 0,
-			ease: 'expo.inOut',
-			stagger: {
-				amount: 0.08,
-			},
+	useEffect(() => {
+		const locations = document.querySelectorAll('.location');
+
+		function handleCityMove(e) {
+			const { offsetX: x, offsetY: y } = e;
+			const { offsetWidth: width, offsetHeight: height } = this;
+
+			const amount = 10;
+			const currentX = (x / width) * (amount * 2) - amount;
+			const currentY = (y / height) * (amount * 2) - amount;
+
+			gsap.to(cityBgRef.current, { x: currentX, y: currentY, duration: 1.5, ease: 'power3.out' });
+		}
+
+		function handleCityExit(e) {
+			gsap.to(cityBgWrapperRef.current, { opacity: 0, duration: 0.5, ease: 'power3.out' });
+			gsap.to(cityBgRef.current, { x: 0, y: 0, duration: 1.5, ease: 'power3.out' });
+		}
+
+		locations.forEach((loc) => {
+			loc.addEventListener('mousemove', handleCityMove);
+			loc.addEventListener('mouseleave', handleCityExit);
 		});
-	};
 
-	const staggerText = (node) => {
-		gsap.fromTo(
-			node,
-			{ y: '100%' },
-			{
-				duration: 0.8,
-				y: 0,
-				delay: 0.2,
-				ease: 'expo.inOut',
-				stagger: {
-					amount: 0.1,
-				},
-			}
-		);
-	};
-
-	const staggerTextExit = (node) => {
-		gsap.fromTo(
-			node,
-			{ y: 0 },
-			{
-				duration: 0.8,
-				y: '-100%',
-				ease: 'expo.inOut',
-				stagger: {
-					amount: 0.05,
-				},
-			}
-		);
-	};
-
-	const fadeInUp = (node, stagger) => {
-		gsap.fromTo(
-			node,
-			{ y: 60, autoAlpha: 0 },
-			{
-				y: 0,
-				duration: 1,
-				delay: 0.2,
-				autoAlpha: 1,
-				ease: 'expo.inOut',
-				stagger: stagger ? 0.05 : 0,
-			}
-		);
-	};
-
-	const fadeInUpExit = (node, stagger) => {
-		gsap.fromTo(
-			node,
-			{ y: 0, autoAlpha: 1 },
-			{
-				y: -60,
-				duration: 0.8,
-				autoAlpha: 0,
-				ease: 'expo.inOut',
-				stagger: stagger ? 0.05 : 0,
-			}
-		);
-	};
-
-	const handleHover = (e) => {
-		console.log(e.target);
-		gsap.to(e.target, {
-			duration: 0.3,
-			y: -3,
-			skewX: -4,
-			ease: 'power1.inOut',
-		});
-	};
-
-	const handleHoverExit = (e) => {
-		gsap.to(e.target, {
-			duration: 0.3,
-			y: 3,
-			skewX: 0,
-			ease: 'power1.inOut',
-		});
-	};
-
-	// adds city image once you hover on
-	const handleCity = (city, target) => {
-		gsap.to(target, {
-			duration: 0,
-			background: `url(${city}) center center`,
-		});
-		gsap.to(target, {
-			duration: 0.4,
-			opacity: 1,
-			ease: 'power3.inOut',
-		});
-		gsap.from(target, {
-			duration: 0.4,
-			skewY: 2,
-			transformOrigin: 'right top',
-		});
-	};
-
-	// Removes the city image once you hover off
-	const handleCityReturn = (target) => {
-		gsap.to(target, {
-			duration: 0,
-			skewY: 0,
-		});
-		gsap.to(target, {
-			duration: 0.4,
-			opacity: 0,
-			skewY: 0,
-		});
-	};
+		return () => {
+			locations.forEach((loc) => {
+				loc.removeEventListener('mousemove', null);
+				loc.removeEventListener('mouseleave', null);
+			});
+		};
+	}, []);
 
 	useEffect(() => {
 		if (!clicked) {
@@ -164,13 +85,16 @@ const Menu = () => {
 			staggerText('.nav-list--item__inner');
 			fadeInUp('.location', true);
 		}
-	}, [clicked, initial]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [clicked]);
 
 	return (
 		<div className='menu-wrapper' ref={menuRef}>
 			<div className='menu-secondary-layer' data-menu-layer></div>
 			<div className='menu-primary-layer' data-menu-layer>
-				<div className='menu-background'></div>
+				<div className='menu-background' ref={cityBgWrapperRef}>
+					<div className='background' ref={cityBgRef}></div>
+				</div>
 				<div className='container'>
 					<div className='menu'>
 						<nav className='nav'>
@@ -218,10 +142,11 @@ const Menu = () => {
 					</div>
 					<div className='locations-wrapper'>
 						<div className='locations'>
-							<div className='location'>Switzerland</div>
-							<div className='location'>Tokyo</div>
-							<div className='location'>London</div>
-							<div className='location'>Amsterdam</div>
+							{cities.map((city, idx) => (
+								<div className='location' key={idx} onMouseEnter={() => handleCityEnter(city.image)}>
+									<span>{city.name}</span>
+								</div>
+							))}
 						</div>
 					</div>
 				</div>
